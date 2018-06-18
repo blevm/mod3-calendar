@@ -40,12 +40,14 @@ function saveNewEvent (eventTitle,eventDescription, eventDate) {
             "Content-type": "Application/json"
         },
         body:JSON.stringify({
-            
+            title: eventTitle,
+            description: eventDescription,
+            time: eventDate,
+            user_id: 1
         })
     }
 
     fetch(EVENTS_URL, config).then(r=>r.json()).then(console.log)
-    debugger
 }
 
 
