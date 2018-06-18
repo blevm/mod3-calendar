@@ -1,0 +1,23 @@
+body {
+  padding: 20px;
+}
+
+tr.header {
+  height: 40px;
+  vertical-align: middle;
+}
+
+tr.header > th {
+  padding-left: 6px;
+  width: 14%;
+}
+
+tr.not-header > td {
+  padding-left: 6px;
+  padding-top: 6px;
+}
+
+tr.not-header {
+  height: 200px;
+  vertical-align: top;
+}
