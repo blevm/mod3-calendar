@@ -5,3 +5,14 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+u1 = User.create(username: 'mb', display_name: 'Michelle')
+u2 = User.create(username: 'mw', display_name: 'Mendy')
+
+tag1 = Tag.create(name: 'Fun')
+tag2 = Tag.create(name: 'Birthdays')
+tag3 = Tag.create(name: 'School')
+
+event1 = Event.create(title: 'Code Challenge', description: 'This won\'t be fun', time: DateTime.new(2018, 06, 18, , 10, 0), user: u1, tag: tag3)
+event2 = Event.create(title: 'Project Due', description: 'This will be fun', time: '3:00PM', user: u1, tag: tag3)
+event3 = Event.create(title: 'The Weekend', description: 'Take a break!', time: '6:00PM', user: u1, tag: tag1)
