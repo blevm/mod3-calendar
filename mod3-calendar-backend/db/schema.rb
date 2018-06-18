@@ -15,22 +15,14 @@ ActiveRecord::Schema.define(version: 2018_06_18_174911) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "days", force: :cascade do |t|
-    t.date "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "events", force: :cascade do |t|
     t.string "title"
     t.text "description"
-    t.time "time"
+    t.datetime "time"
     t.bigint "user_id"
     t.bigint "tag_id"
-    t.bigint "day_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["day_id"], name: "index_events_on_day_id"
     t.index ["tag_id"], name: "index_events_on_tag_id"
     t.index ["user_id"], name: "index_events_on_user_id"
   end
@@ -48,7 +40,6 @@ ActiveRecord::Schema.define(version: 2018_06_18_174911) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "events", "days"
   add_foreign_key "events", "tags"
   add_foreign_key "events", "users"
 end
