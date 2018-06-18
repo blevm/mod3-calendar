@@ -11,5 +11,9 @@ class Api::V1::EventsController < ApplicationController
     render json: events
   end
 
+  def create
+    byebug
+  end
+
 
 end
