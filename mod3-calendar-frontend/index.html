@@ -12,11 +12,28 @@
     <script src="src/index.js"></script>
   </head>
   <body>
-    <h1>Log in to view your calendar:</h1>
-    <form>
+    <!-- <h1>Log in to view your calendar:</h1>
+    <form id='new-user-form'>
       <input type="text" placeholder="Enter your username here" style="width: 300px;">
       <button class="btn btn-primary" type="submit">Log In</button>
-    </form>
+    </form> -->
+    <div style="padding: 10px 0px 15px 0px;">
+      <span><strong>Currently viewing events for the following tags:</strong></span>
+      <span id="tags-go-here"></span>
+    </div>
+    <div style="padding: 10px 0px;">
+      <form>
+        <h6>Add a new tag:
+        <input type="text" placeholder="Enter a new tag here" style="width: 200px;">
+        <select id="tag-class-name">
+          <option value="alert alert-danger">Red</option>
+          <option value="alert alert-warning">Yellow</option>
+          <option value="alert alert-success">Green</option>
+          <option value="alert alert-info">Blue</option>
+        </select>
+        <button class="btn btn-primary btn-sm" id='new-tag-form' type="button">Add a tag</button></h6>
+      </form>
+    </div>
     <hr>
     <br>
     <h1>June</h1>
