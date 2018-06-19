@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :events, only: [:index, :create]
       resources :users, only: [:index, :show]
+      # post 'login', to: 'events#current_user'
     end
   end
 end

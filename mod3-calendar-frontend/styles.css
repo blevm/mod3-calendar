@@ -1,5 +1,5 @@
 body {
-  padding: 20px;
+  padding: 30px;
 }
 
 tr.header {
@@ -8,16 +8,16 @@ tr.header {
 }
 
 tr.header > th {
-  padding-left: 6px;
+  padding: 6px;
   width: 14%;
 }
 
 tr.not-header > td {
-  padding-left: 6px;
-  padding-top: 6px;
+  padding: 6px;
+  padding: 6px;
 }
 
 tr.not-header {
-  height: 200px;
+  height: 150px;
   vertical-align: top;
 }
