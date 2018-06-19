@@ -7,11 +7,6 @@ class Api::V1::EventsController < ApplicationController
     render json: events
   end
 
-  def current_user
-    byebug
-    # user = User.find(params[:username])
-  end
-
   def create
     event = Event.create(event_params)
     render json: event
