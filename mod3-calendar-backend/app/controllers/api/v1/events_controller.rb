@@ -12,7 +12,7 @@ class Api::V1::EventsController < ApplicationController
     render json: event
   end
 
-  def delete
+  def destroy
     event = Event.find(params[:id])
     event.destroy
     render json: event
