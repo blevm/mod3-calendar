@@ -27,26 +27,43 @@ function index() {
     fetch(EVENTS_URL).then(r=>r.json()).then(d=>appendToCal(d))
 }
 
+function deleteAnEvent(id) {
+  let uniqueURL = `${EVENTS_URL}/${id}`
+  console.log(uniqueURL)
+  fetch(uniqueURL, {method: "DELETE"})
+}
+
 function appendToCal(eventsObj) {
     eventsObj.forEach(event => {
         dateDiv = document.querySelector(`div[data-day-id='${event.time.split('T')[0]}']`)
-        dateDiv.innerHTML += `<div class="alert alert-success" data-event-id="${event.id}" data-event-description="${event.description}">${event.title}<div>`
+        dateDiv.innerHTML += `<div class="alert alert-success" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>${event.title}<div>`
     });
 }
 
 function appendOneEventToCal(singleEvent) {
     dateDiv = document.querySelector(`div[data-day-id='${singleEvent.time.split('T')[0]}']`)
-    dateDiv.innerHTML += `<div class="alert alert-success" data-event-id="${event.id}" data-event-description="${event.description}">${singleEvent.title}<div>`
+    dateDiv.innerHTML += `<div class="alert alert-success" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>${singleEvent.title}<div>`
 }
 
+
+
 calendarTable.addEventListener('click', e=>{
-    if (e.target.tagName === "DIV") {
+  console.log(e.target)
+  if (e.target.tagName === "SPAN"){
+    deleteAnEvent(e.target.parentElement.parentElement.dataset.eventId)
+  } else if (e.target.tagName === "DIV") {
       modalDiv.innerHTML =
       `<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="detailsModalLabel">${e.target.innerText}</h5>
+              <h5 class="modal-title" id="detailsModalLabel">${e.target.dataset.eventTitle}</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
