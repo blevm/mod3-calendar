@@ -16,3 +16,5 @@ tag3 = Tag.create(name: 'School')
 event1 = Event.create(title: 'Code Challenge', description: 'This won\'t be fun', time: '2018-06-18 2:21PM', user: u1, tag: tag3)
 event2 = Event.create(title: 'Project Due', description: 'This will be fun', time: '2018-06-20 3:00PM', user: u1, tag: tag3)
 event3 = Event.create(title: 'The Weekend', description: 'Take a break!', time: '2018-06-22 6:00PM', user: u1, tag: tag1)
+
+

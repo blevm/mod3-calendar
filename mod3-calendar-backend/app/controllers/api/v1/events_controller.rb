@@ -3,7 +3,7 @@ class Api::V1::EventsController < ApplicationController
   def index
     # current_user = User.first
     # events = current_user.events
-    events = Event.all
+    events = Event.all.sort { |x, y| (x.time || nil) <=> (y.time || nil)}
     render json: events
   end
 
