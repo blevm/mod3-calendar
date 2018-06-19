@@ -12,6 +12,12 @@ class Api::V1::EventsController < ApplicationController
     render json: event
   end
 
+  def delete
+    event = Event.find(params[:id])
+    event.destroy
+    render json: event
+  end
+
   private
   def event_params
     params.permit(:title, :description, :time, :user_id, :tag_id)
