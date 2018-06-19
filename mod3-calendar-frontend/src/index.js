@@ -220,14 +220,13 @@ function appendFlatironEventsToRows(flatironEventsObjs) {
 flatironEventstable.addEventListener('click', function(event) {
 
   if (event.target.innerText === 'ADD')  { 
-
     const allChecked = document.querySelectorAll('input:checked')
       if (allChecked.length === 0 ) {
         alert("Please Select At Least One Event To Add")
       } else if (allChecked.length > 0 ) {
         allChecked.forEach(checkBox => {
           const row = checkBox.parentElement.parentElement
-          saveNewEvent (row.children[1].innerText, row.children[2].innerText, row.children[3].innerText)
+          saveNewEvent (row.children[1].innerText, row.children[2].innerText, row.children[3].innerText, 3)
         });
       }
   }
