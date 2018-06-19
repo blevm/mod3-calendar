@@ -27,6 +27,15 @@ ActiveRecord::Schema.define(version: 2018_06_19_192643) do
     t.index ["user_id"], name: "index_events_on_user_id"
   end
 
+  create_table "flatiron_events", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "time"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "tags", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
