@@ -19,6 +19,31 @@
     </form>
     <hr>
     <br>
+    
+     <a class="btn btn-primary" data-toggle="collapse" href="#flatiron-events-container" role="button" aria-expanded="false" aria-controls="flatiron-events-container">
+        View Flatiron Events
+      </a>
+
+      <div id="flatiron-events-container" class="collapse">
+          <table id="flatiron-events-table" class="table">
+              <thead>
+                  <tr>
+                    <th id="add-flatiron-events" class="btn btn-secondary">ADD</th>
+                    <th>Event Title</th>
+                    <th>Event Description</th>
+                    <th id="event-time-header" >Event Time</th>
+                    <th>Event Location</th>
+                  </tr>
+                </thead>
+                <tbody id="flatiron-events-table-body">
+    
+                </tbody>
+          </table>
+        </div>
+    
+
+
+    <br>  
     <h1>June</h1>
     <div>
       <table id="calendar-table" class="table-bordered" width="100%">
@@ -115,7 +140,6 @@
   </div>
       <!-- End Modal -->
 
-
-
+    
   </body>
 </html>

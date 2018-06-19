@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :events, only: [:index, :create, :destroy]
       resources :users, only: [:index, :show]
+      resources :flatiron_events, only: [:index]
       # post 'login', to: 'events#current_user'
     end
   end
