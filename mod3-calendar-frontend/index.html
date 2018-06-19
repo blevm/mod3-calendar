@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Calendar</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="src/index.js"></script>
+  </head>
+  <body>
+    <h1>Log in to view your calendar:</h1>
+    <form>
+      <input type="text" placeholder="Enter your username here" style="width: 300px;">
+      <button class="btn btn-primary" type="submit">Log In</button>
+    </form>
+    <hr>
+    <br>
+    <h1>June</h1>
+    <div>
+      <table id="calendar-table" class="table-bordered" width="100%">
+        <tr class="header">
+          <th>Sun</th>
+          <th>Mon</th>
+          <th>Tues</th>
+          <th>Wed</th>
+          <th>Thurs</th>
+          <th>Fri</th>
+          <th>Sat</th>
+        </tr>
+        <tr class="not-header">
+          <td><div></div></td>
+          <td><div></div></td>
+          <td><div></div></td>
+          <td><div></div></td>
+          <td><div></div></td>
+          <td>1<div data-day-id="2018-06-01"></div></td>
+          <td>2<div data-day-id="2018-06-02"></div></td>
+        </tr>
+        <tr class="not-header">
+          <td>3<div data-day-id="2018-06-03"></div></td>
+          <td>4<div data-day-id="2018-06-04"></div></td>
+          <td>5<div data-day-id="2018-06-05"></div></td>
+          <td>6<div data-day-id="2018-06-06"></div></td>
+          <td>7<div data-day-id="2018-06-07"></div></td>
+          <td>8<div data-day-id="2018-06-08"></div></td>
+          <td>9<div data-day-id="2018-06-09"></div></td>
+        </tr>
+        <tr class="not-header">
+          <td>10<div data-day-id="2018-06-10"></div></td>
+          <td>11<div data-day-id="2018-06-11"></div></td>
+          <td>12<div data-day-id="2018-06-12"></div></td>
+          <td>13<div data-day-id="2018-06-13"></div></td>
+          <td>14<div data-day-id="2018-06-14"></div></td>
+          <td>15<div data-day-id="2018-06-15"></div></td>
+          <td>16<div data-day-id="2018-06-16"></div></td>
+        </tr>
+        <tr class="not-header">
+          <td>17<div data-day-id="2018-06-17"></div></td>
+          <td>18<div data-day-id="2018-06-18"></div></td>
+          <td>19<div data-day-id="2018-06-19"></div></td>
+          <td>20<div data-day-id="2018-06-20"></div></td>
+          <td>21<div data-day-id="2018-06-21"></div></td>
+          <td>22<div data-day-id="2018-06-22"></div></td>
+          <td>23<div data-day-id="2018-06-23"></div></td>
+        </tr>
+        <tr class="not-header">
+          <td>24<div data-day-id="2018-06-24"></div></td>
+          <td>25<div data-day-id="2018-06-25"></div></td>
+          <td>26<div data-day-id="2018-06-26"></div></td>
+          <td>27<div data-day-id="2018-06-27"></div></td>
+          <td>28<div data-day-id="2018-06-28"></div></td>
+          <td>29<div data-day-id="2018-06-29"></div></td>
+          <td>30<div data-day-id="2018-06-30"></div></td>
+        </tr>
+      </table>
+    </div>
+
+
+  <!-- Modal -->
+  <div id='modal-container'>
+    <!-- <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Create Event:</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <form id="add-event-form">
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Event Title:</label>
+                    <input type="text" class="form-control" id="event-title">
+                  </div>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Event Description:</label>
+                    <textarea class="form-control" id="event-description"></textarea>
+                  </div>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <button id="new-event-form-button" type="button" class="btn btn-primary">Save changes</button>
+                </form>
+          </div>
+          <!-- <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="new-event-form-button" type="button" class="btn btn-primary">Save changes</button>
+          </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+      <!-- End Modal -->
+
+
+
+  </body>
+</html>
