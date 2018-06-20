@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 let allTags = ''
 EVENTS_URL = "http://localhost:3000/api/v1/events"
-FLATIRONEVENTS_URL = "http://localhost:3000/api/v1/flatiron_events"  
+FLATIRONEVENTS_URL = "http://localhost:3000/api/v1/flatiron_events"
 TAGS_URL = "http://localhost:3000/api/v1/tags"
 const calendarTable = document.getElementById('calendar-table')
 const modalDiv = document.getElementById('modal-container')
@@ -23,15 +23,24 @@ console.log(newTagForm)
 //   postingUsername(usernameInput.value)
 // })
 
+function index() {
+  fetch(EVENTS_URL).then(r=>r.json()).then(d=>appendToCal(d))
+}
+
+
+///////////TAG THINGS
+
+function loadTags() {
+  fetch(TAGS_URL).then(r=>r.json()).then(d=>displayTagsOnHeader(d))
+}
+
 newTagForm.addEventListener('click', function(event) {
   event.preventDefault();
   postingATag(event.target.parentElement.querySelector('input').value, event.target.parentElement.querySelector('select').value)
 })
 
 tagSpan.addEventListener('click', function(event) {
-  debugger
   console.log(document.querySelectorAll('div.`${event.target.className}`'))
-
 })
 
 function postingATag(tagName, className) {
@@ -42,6 +51,21 @@ function postingATag(tagName, className) {
   }
   fetch(TAGS_URL, config).then(resp => resp.json()).then(displayOneTagOnHeader)
 }
+
+function displayTagsOnHeader(tags) {
+  allTags = tags
+  tags.forEach(tag => {
+    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
+  })
+}
+
+function displayOneTagOnHeader(tag) {
+    allTags.push(tag)
+    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
+}
+
+
+
 
 function postingUsername(user) {
   let config = {
@@ -54,47 +78,54 @@ function postingUsername(user) {
 }
 
 
-function index() {
-  fetch(EVENTS_URL).then(r=>r.json()).then(d=>appendToCal(d))
-}
-
-function loadTags() {
-  fetch(TAGS_URL).then(r=>r.json()).then(d=>displayTagsOnHeader(d))
-}
-
-function displayTagsOnHeader(tags) {
-  allTags = tags
-  tags.forEach(tag => {
-    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
-  })
-}
-
-function displayOneTagOnHeader(tag) {
-    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
-}
-
 function deleteAnEvent(id) {
   let uniqueURL = `${EVENTS_URL}/${id}`
   console.log(uniqueURL)
   fetch(uniqueURL, {method: "DELETE"})
 }
 
+function standardizeTimes(time) {
+  time = time.split(':');
+
+  let hours = Number(time[0]);
+  let minutes = Number(time[1]);
+
+  let standardTime;
+
+  if (hours > 0 && hours <= 12) {
+    standardTime = "" + hours;
+  } else if (hours > 12) {
+    standardTime = "" + (hours - 12);
+  } else if (hours === 0) {
+    standardTime = "12";
+  }
+
+  standardTime += (minutes < 10) ? ":0" + minutes : ":" + minutes;
+  standardTime += (hours >= 12) ? " PM" : " AM";
+
+  if (standardTime === "12:00 AM") {
+    standardTime = "All day"
+  }
+
+  return standardTime;
+}
+
 function appendToCal(eventsObj) {
     eventsObj.forEach(event => {
         dateDiv = document.querySelector(`div[data-day-id='${event.time.split('T')[0]}']`)
-        dateDiv.innerHTML += `<div class="${event.tag.class_name}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}">
+        dateDiv.innerHTML += `<div class="${event.tag.class_name}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}" data-event-time=${event.time}">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" >
           <span aria-hidden="true">&times;</span>
-        </button>${event.title}<div>`
+        </button><em>${standardizeTimes(event.time.split("T")[1])}</em><br>${event.title}</div>`
     });
 }
 
 function appendOneEventToCal(singleEvent) {
     dateDiv = document.querySelector(`div[data-day-id='${singleEvent.time.split('T')[0]}']`)
-    dateDiv.innerHTML += `<div class="${singleEvent.tag.class_name}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}">
+    dateDiv.innerHTML += `<div class="${singleEvent.tag.class_name}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}" data-event-time=${singleEvent.time}">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
-      </button>${singleEvent.title}<div>`
+      </button><em>${standardizeTimes(singleEvent.time.split("T")[1])}</em><br>${singleEvent.title}<div>`
 }
 
 function tagOptionsForANewEvent() {
@@ -109,25 +140,44 @@ calendarTable.addEventListener('click', e=>{
   console.log(e.target)
   if (e.target.tagName === "SPAN"){
     deleteAnEvent(e.target.parentElement.parentElement.dataset.eventId)
-  } else if (e.target.tagName === "DIV") {
-      modalDiv.innerHTML =
-      `<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="detailsModalLabel">${e.target.dataset.eventTitle}</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              ${e.target.dataset.eventDescription}
+  } else if (e.target.tagName === "DIV" || e.target.parentElement.tagName === "DIV") {
+      if (e.target.tagName === "DIV") {
+        modalDiv.innerHTML =
+        `<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel"><em>${standardizeTimes(e.target.dataset.eventTime.split("T")[1])}</em> |  ${e.target.dataset.eventTitle}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ${e.target.dataset.eventDescription}
+              </div>
             </div>
           </div>
-        </div>
-      </div>`
-      $('#detailsModal').modal('show')
-
+        </div>`
+        $('#detailsModal').modal('show')
+      } else {
+        modalDiv.innerHTML =
+        `<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="detailsModalLabel"><em>${standardizeTimes(e.target.parentElement.dataset.eventTime.split("T")[1])}</em> |  ${e.target.parentElement.dataset.eventTitle}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                ${e.target.parentElement.dataset.eventDescription}
+              </div>
+            </div>
+          </div>
+        </div>`
+        $('#detailsModal').modal('show')
+      }
     } else if (e.target.tagName === "TD"){
       modalDiv.innerHTML =
       `<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -149,6 +199,10 @@ calendarTable.addEventListener('click', e=>{
                     <label for="message-text" class="col-form-label">Event Description:</label>
                     <textarea class="form-control" id="event-description"></textarea>
                   </div>
+                  <div class="form-group">
+                    <label for="message-text" class="col-form-label">Event Time:</label>
+                    <input type="time">
+                  </div>
                   <div class-"form-group">Select a tag:
                   <select id='new-event-tag'>
                     ${tagOptionsForANewEvent()}
@@ -169,14 +223,14 @@ calendarTable.addEventListener('click', e=>{
         if (e.target.className === 'btn btn-primary') {
            eventTitle = document.getElementById('event-title')
            eventDescription =  document.getElementById('event-description')
+           eventTime = e.target.parentElement.querySelector('input[type="time"]')
            eventTag = document.getElementById('new-event-tag')
-           saveNewEvent(eventTitle.value, eventDescription.value, date, eventTag.value)
+           saveNewEvent(eventTitle.value, eventDescription.value, `${date} ${eventTime.value}` , eventTag.value)
            $('#exampleModal').modal('hide')
         }
     })
   }
 })
-
 
 function saveNewEvent (eventTitle, eventDescription, eventDate, tagId) {
     config ={
@@ -204,22 +258,22 @@ getFlatironEventsFromServer()
 function appendFlatironEventsToRows(flatironEventsObjs) {
   flatironEventsObjs.forEach(flatironEvent => {
     tableBody = document.getElementById('flatiron-events-table-body')
-    tableBody.innerHTML += 
+    tableBody.innerHTML +=
     `
      <tr>
-      <td><input type="checkbox" data-flatiron-event-id="${flatironEvent.id}" ></td> 
+      <td><input type="checkbox" data-flatiron-event-id="${flatironEvent.id}" ></td>
       <td>${flatironEvent.title}</td>
       <td>${flatironEvent.description}</td>
       <td class="f-e-time">${flatironEvent.time.split('T')[0]}</td>
       <td>${flatironEvent.location}</td>
-     </tr> 
+     </tr>
     `
 });
 }
 
 flatironEventstable.addEventListener('click', function(event) {
 
-  if (event.target.innerText === 'ADD')  { 
+  if (event.target.innerText === 'ADD')  {
     const allChecked = document.querySelectorAll('input:checked')
       if (allChecked.length === 0 ) {
         alert("Please Select At Least One Event To Add")
@@ -250,7 +304,7 @@ function sorter (tdToSort) {
   switchcount = 0
   switching = true;
   // Set the sorting direction to ascending:
-  dir = "asc"; 
+  dir = "asc";
   /* Make a loop that will continue until
   no switching has been done: */
   while (switching) {
@@ -288,7 +342,7 @@ function sorter (tdToSort) {
       rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
       switching = true;
       // Each time a switch is done, increase this count by 1:
-      switchcount ++; 
+      switchcount ++;
     } else {
       /* If no switching has been done AND the direction is "asc",
       set the direction to "desc" and run the while loop again. */
@@ -302,7 +356,7 @@ function sorter (tdToSort) {
 }
 
 eventTimeHeader.addEventListener('click', function(event) {
-  
+
 })
 
 
