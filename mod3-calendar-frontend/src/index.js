@@ -40,7 +40,18 @@ newTagForm.addEventListener('click', function(event) {
 })
 
 tagSpan.addEventListener('click', function(event) {
-  console.log(document.querySelectorAll('div.`${event.target.className}`'))
+  let affectedEvents = Array.from(document.querySelectorAll(`div[data-tag-id="${event.target.dataset.tagId}"]`))
+  if (event.target.className === 'alert') {
+    affectedEvents.forEach(function(e) {
+      e.style.visibility = "visible";
+    })
+    event.target.className = event.target.dataset.tagClassName;
+  } else {
+    affectedEvents.forEach(function(e) {
+      e.style.visibility = "hidden";
+    })
+    event.target.className = 'alert';
+    }
 })
 
 function postingATag(tagName, className) {
@@ -55,13 +66,13 @@ function postingATag(tagName, className) {
 function displayTagsOnHeader(tags) {
   allTags = tags
   tags.forEach(tag => {
-    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
+    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-class-name="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
   })
 }
 
 function displayOneTagOnHeader(tag) {
     allTags.push(tag)
-    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
+    tagSpan.innerHTML += `<span style="margin: 8px;"><span class="${tag.class_name}" data-tag-class-name="${tag.class_name}" data-tag-id="${tag.id}" style="padding: 10px;">${tag.name}<span></span>`
 }
 
 
@@ -113,7 +124,7 @@ function standardizeTimes(time) {
 function appendToCal(eventsObj) {
     eventsObj.forEach(event => {
         dateDiv = document.querySelector(`div[data-day-id='${event.time.split('T')[0]}']`)
-        dateDiv.innerHTML += `<div class="${event.tag.class_name}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}" data-event-time=${event.time}">
+        dateDiv.innerHTML += `<div class="${event.tag.class_name}" data-tag-id="${event.tag.id}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}" data-event-time=${event.time}">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" >
           <span aria-hidden="true">&times;</span>
         </button><em>${standardizeTimes(event.time.split("T")[1])}</em><br>${event.title}</div>`
@@ -122,7 +133,7 @@ function appendToCal(eventsObj) {
 
 function appendOneEventToCal(singleEvent) {
     dateDiv = document.querySelector(`div[data-day-id='${singleEvent.time.split('T')[0]}']`)
-    dateDiv.innerHTML += `<div class="${singleEvent.tag.class_name}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}" data-event-time=${singleEvent.time}">
+    dateDiv.innerHTML += `<div class="${singleEvent.tag.class_name}" data-tag-id="${singleEvent.tag.id}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}" data-event-time=${singleEvent.time}">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button><em>${standardizeTimes(singleEvent.time.split("T")[1])}</em><br>${singleEvent.title}<div>`
