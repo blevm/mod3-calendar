@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 let allTags = ''
 EVENTS_URL = "http://localhost:3000/api/v1/events"
+USERS_URL ="http://localhost:3000/api/v1/users"
 FLATIRONEVENTS_URL = "http://localhost:3000/api/v1/flatiron_events"
 TAGS_URL = "http://localhost:3000/api/v1/tags"
 const calendarTable = document.getElementById('calendar-table')
@@ -15,24 +16,55 @@ const eventTimeHeader = document.getElementById('event-time-header')
 
 const newTagForm = document.getElementById('new-tag-form')
 const tagSpan = document.getElementById('tags-go-here')
-console.log(newTagForm)
+let currentUser 
+
+logInForm.addEventListener('submit', function(event) {
+  event.preventDefault();
+  postingUsername(usernameInput.value)
+})
+
+function postingUsername(user) {
+  let config = {
+    method: 'POST',
+    headers: {'Content-type':'application/json'},
+    body: JSON.stringify({username: user})
+  }
+  fetch('http://localhost:3000/api/v1/login', config).then(r=>r.json()).then(d=> {
+    currentUser = d.id;
+    logInForm.innerHTML = `<h1>Welcome ${d.username}</h1>`
+    index(d.id)
+  })
+}
 
 
-// logInForm.addEventListener('submit', function(event) {
-//   event.preventDefault();
-//   postingUsername(usernameInput.value)
-// })
+function index(userId) {
+  fetch(`${USERS_URL}/${userId}/events`).then(r=>r.json()).then(d=>
+    {
+      const tags = d.map(e => e.tag)
+      displayTagsOnHeader(getUniqueTags(tags))
 
-function index() {
-  fetch(EVENTS_URL).then(r=>r.json()).then(d=>appendToCal(d))
+    appendToCal(d)
+  })
+}
+
+
+function getUniqueTags(array) {
+
+  uniqueTags = []
+  array.forEach(obj => {
+    if (uniqueTags.find(item => item.id === obj.id) === undefined) {
+      uniqueTags.push(obj)
+    }
+  })
+  return uniqueTags
 }
 
 
 ///////////TAG THINGS
 
-function loadTags() {
-  fetch(TAGS_URL).then(r=>r.json()).then(d=>displayTagsOnHeader(d))
-}
+// function loadTags() {
+//   fetch(TAGS_URL).then(r=>r.json()).then(d=>displayTagsOnHeader(d))
+// }
 
 newTagForm.addEventListener('click', function(event) {
   event.preventDefault();
@@ -77,16 +109,6 @@ function displayOneTagOnHeader(tag) {
 
 
 
-
-function postingUsername(user) {
-  let config = {
-    method: 'POST',
-    headers: {'Content-type':'application/json'},
-    body: JSON.stringify({username: user})
-  }
-  console.log(config)
-  fetch('http://localhost:3000/api/v1/login', config)
-}
 
 
 function deleteAnEvent(id) {
@@ -253,7 +275,7 @@ function saveNewEvent (eventTitle, eventDescription, eventDate, tagId) {
             title: eventTitle,
             description: eventDescription,
             time: eventDate,
-            user_id: 1,
+            user_id: currentUser,
             tag_id: tagId
         })
     }
@@ -371,7 +393,6 @@ eventTimeHeader.addEventListener('click', function(event) {
 })
 
 
-index()
-loadTags()
+// loadTags()
 
 });
