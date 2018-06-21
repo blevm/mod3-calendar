@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function(event) {
 
-let allTags = ''
+let allTags = []
 EVENTS_URL = "http://localhost:3000/api/v1/events"
 USERS_URL ="http://localhost:3000/api/v1/users"
 FLATIRONEVENTS_URL = "http://localhost:3000/api/v1/flatiron_events"
@@ -16,7 +16,7 @@ const eventTimeHeader = document.getElementById('event-time-header')
 
 const newTagForm = document.getElementById('new-tag-form')
 const tagSpan = document.getElementById('tags-go-here')
-let currentUser 
+let currentUser
 
 logInForm.addEventListener('submit', function(event) {
   event.preventDefault();
@@ -42,14 +42,12 @@ function index(userId) {
     {
       const tags = d.map(e => e.tag)
       displayTagsOnHeader(getUniqueTags(tags))
-
-    appendToCal(d)
-  })
+      appendToCal(d)
+    })
 }
 
 
 function getUniqueTags(array) {
-
   uniqueTags = []
   array.forEach(obj => {
     if (uniqueTags.find(item => item.id === obj.id) === undefined) {
@@ -163,10 +161,14 @@ function appendOneEventToCal(singleEvent) {
 
 function tagOptionsForANewEvent() {
   let returnValue = ''
-  allTags.map(function(tagObj) {
+  if (allTags.length === 0) {
+    return `<span style="color:red;">Create a tag before creating an event!</span>`
+  } else {
+    allTags.map(function(tagObj) {
     returnValue += `<option value="${tagObj.id}">${tagObj.name}</option>`
-  })
-  return returnValue
+    })
+    return `<select id='new-event-tag'>${returnValue}</select>`
+  }
 }
 
 calendarTable.addEventListener('click', e=>{
@@ -237,12 +239,10 @@ calendarTable.addEventListener('click', e=>{
                     <input type="time">
                   </div>
                   <div class-"form-group">Select a tag:
-                  <select id='new-event-tag'>
-                    ${tagOptionsForANewEvent()}
-                  </select><br><br>
+                    ${tagOptionsForANewEvent()}<br><br>
                   </div>
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <button id="new-event-form-button" type="button" class="btn btn-primary">Save changes</button>
+                  <button id="new-event-form-button" type="button" class="btn btn-primary" ${disabled()}>Save changes</button>
                 </form>
             </div>
           </div>
@@ -258,12 +258,19 @@ calendarTable.addEventListener('click', e=>{
            eventDescription =  document.getElementById('event-description')
            eventTime = e.target.parentElement.querySelector('input[type="time"]')
            eventTag = document.getElementById('new-event-tag')
+           // debugger
            saveNewEvent(eventTitle.value, eventDescription.value, `${date} ${eventTime.value}` , eventTag.value)
            $('#exampleModal').modal('hide')
         }
     })
   }
 })
+
+function disabled() {
+  if (allTags.length === 0) {
+    return `disabled`
+  }
+}
 
 function saveNewEvent (eventTitle, eventDescription, eventDate, tagId) {
     config ={
