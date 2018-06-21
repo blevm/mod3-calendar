@@ -1,10 +1,20 @@
 class Api::V1::EventsController < ApplicationController
 
   def index
+    events = Event.all
+    render json: events
     # current_user = User.first
     # events = current_user.events
-    events = Event.all.sort { |x, y| (x.time || nil) <=> (y.time || nil)}
-    render json: events
+    # events = Event.all.sort { |x, y| (x.time || nil) <=> (y.time || nil)}
+    # user = User.find_by(username:  params[:user][:username])
+    # if user
+    #   events = user.events
+    #   render json: events
+    # else
+    #   user = User.create(username:  params[:user][:username])
+    #   events = user.events
+    #   render json: events
+    # end
   end
 
   def create
