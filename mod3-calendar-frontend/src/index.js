@@ -300,13 +300,13 @@ function appendFlatironEventsToRows(flatironEventsObjs) {
     `
      <tr>
       <td><input type="checkbox" data-flatiron-event-id="${flatironEvent.id}" ></td>
-      <td>${flatironEvent.title}</td>
+      <td style="width: 300px;" >${flatironEvent.title}</td>
       <td>${flatironEvent.description}</td>
-      <td class="f-e-time">${flatironEvent.time.split('T')[0]}</td>
+      <td class="f-e-time">${new Date (flatironEvent.time).toLocaleString()}</td>
       <td>${flatironEvent.location}</td>
      </tr>
     `
-});
+});     //new Date(${flatironEvent.time}).toLocaleDateString()
 }
 
 flatironEventstable.addEventListener('click', function(event) {
