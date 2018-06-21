@@ -28,6 +28,13 @@ class Api::V1::EventsController < ApplicationController
     render json: event
   end
 
+
+  def update 
+    event = Event.find(params[:id])
+    event.update(time: params[:time])
+    render json: event
+  end
+
   private
   def event_params
     params.permit(:title, :description, :time, :user_id, :tag_id)

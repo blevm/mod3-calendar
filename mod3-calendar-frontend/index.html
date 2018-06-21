@@ -9,9 +9,54 @@
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="src/index.js"></script>
+    <script type="text/javascript" src="src/index.js"></script>
+    <script>
+
+      function dragstart_handler(ev) {
+        // Add the target element's id to the data transfer object
+        ev.dataTransfer.setData("text/plain", ev.target.dataset.eventId);
+        ev.dropEffect = "move";
+       }
+
+       function dragover_handler(ev) {
+        ev.preventDefault();
+        // Set the dropEffect to move
+        ev.dataTransfer.dropEffect = "move"
+       }
+
+       function drop_handler(ev) {
+        ev.preventDefault();
+        // Get the id of the target and add the moved element to the target's DOM
+        
+        var data = ev.dataTransfer.getData("text");
+        const movedElement = document.querySelector(`div [data-event-id='${data}']`)
+        
+        const newDate = ev.target.firstElementChild.dataset.dayId
+        const oldTime = movedElement.dataset.eventTime.split('T')[1]
+        const time = newDate + 'T' + oldTime
+
+        if (ev.target.tagName === 'TD') {
+          ev.target.appendChild(movedElement)
+          updateEventTime(data, time)
+          }
+
+       }
+
+       function updateEventTime (eventId, newTime) {  
+        let config = {
+          method: 'PATCH',
+          headers: {'Content-type':'application/json'},
+          body: JSON.stringify({time: newTime})
+        }
+
+        fetch(`http://localhost:3000/api/v1/events/${eventId}`, config).then(r=>r.json()).then(console.log)
+       }
+       
+      </script>
+
   </head>
   <body>
+    
 
     <form align="center" id='new-user-form'>
         <h1>Log in to view your calendar:</h1>
@@ -35,7 +80,7 @@
           <option value="alert alert-success">Green</option>
           <option value="alert alert-info">Blue</option>
         </select>
-        <button class="btn btn-primary btn-sm" id='new-tag-form' type="button">Add a tag</button></h6>
+        <button class="btn btn-primary btn-sm" id='new-tag-form' type="submit">Add a tag</button></h6>
       </form>
     </div>
     <hr>
@@ -78,49 +123,49 @@
           <th>Sat</th>
         </tr>
         <tr class="not-header">
-          <td><div></div></td>
-          <td><div></div></td>
-          <td><div></div></td>
-          <td><div></div></td>
-          <td><div></div></td>
-          <td>1<div data-day-id="2018-06-01"></div></td>
-          <td>2<div data-day-id="2018-06-02"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" ><div></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" ><div></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" ><div></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" ><div></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" ><div></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >1<div data-day-id="2018-06-01"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >2<div data-day-id="2018-06-02"></div></td>
         </tr>
         <tr class="not-header">
-          <td>3<div data-day-id="2018-06-03"></div></td>
-          <td>4<div data-day-id="2018-06-04"></div></td>
-          <td>5<div data-day-id="2018-06-05"></div></td>
-          <td>6<div data-day-id="2018-06-06"></div></td>
-          <td>7<div data-day-id="2018-06-07"></div></td>
-          <td>8<div data-day-id="2018-06-08"></div></td>
-          <td>9<div data-day-id="2018-06-09"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >3<div data-day-id="2018-06-03"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >4<div data-day-id="2018-06-04"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >5<div data-day-id="2018-06-05"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >6<div data-day-id="2018-06-06"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >7<div data-day-id="2018-06-07"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >8<div data-day-id="2018-06-08"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >9<div data-day-id="2018-06-09"></div></td>
         </tr>
         <tr class="not-header">
-          <td>10<div data-day-id="2018-06-10"></div></td>
-          <td>11<div data-day-id="2018-06-11"></div></td>
-          <td>12<div data-day-id="2018-06-12"></div></td>
-          <td>13<div data-day-id="2018-06-13"></div></td>
-          <td>14<div data-day-id="2018-06-14"></div></td>
-          <td>15<div data-day-id="2018-06-15"></div></td>
-          <td>16<div data-day-id="2018-06-16"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >10<div data-day-id="2018-06-10"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >11<div data-day-id="2018-06-11"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >12<div data-day-id="2018-06-12"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >13<div data-day-id="2018-06-13"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >14<div data-day-id="2018-06-14"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >15<div data-day-id="2018-06-15"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >16<div data-day-id="2018-06-16"></div></td>
         </tr>
         <tr class="not-header">
-          <td>17<div data-day-id="2018-06-17"></div></td>
-          <td>18<div data-day-id="2018-06-18"></div></td>
-          <td>19<div data-day-id="2018-06-19"></div></td>
-          <td>20<div data-day-id="2018-06-20"></div></td>
-          <td>21<div data-day-id="2018-06-21"></div></td>
-          <td>22<div data-day-id="2018-06-22"></div></td>
-          <td>23<div data-day-id="2018-06-23"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >17<div data-day-id="2018-06-17"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >18<div data-day-id="2018-06-18"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >19<div data-day-id="2018-06-19"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >20<div data-day-id="2018-06-20"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >21<div data-day-id="2018-06-21"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >22<div data-day-id="2018-06-22"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >23<div data-day-id="2018-06-23"></div></td>
         </tr>
         <tr class="not-header">
-          <td>24<div data-day-id="2018-06-24"></div></td>
-          <td>25<div data-day-id="2018-06-25"></div></td>
-          <td>26<div data-day-id="2018-06-26"></div></td>
-          <td>27<div data-day-id="2018-06-27"></div></td>
-          <td>28<div data-day-id="2018-06-28"></div></td>
-          <td>29<div data-day-id="2018-06-29"></div></td>
-          <td>30<div data-day-id="2018-06-30"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >24<div data-day-id="2018-06-24"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >25<div data-day-id="2018-06-25"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >26<div data-day-id="2018-06-26"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >27<div data-day-id="2018-06-27"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >28<div data-day-id="2018-06-28"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >29<div data-day-id="2018-06-29"></div></td>
+          <td ondragover="dragover_handler(event)" ondrop="drop_handler(event)" >30<div data-day-id="2018-06-30"></div></td>
         </tr>
       </table>
     </div>
@@ -161,6 +206,7 @@
   </div>
       <!-- End Modal -->
 
-    
+
   </body>
+
 </html>

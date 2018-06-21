@@ -18,6 +18,11 @@ const newTagForm = document.getElementById('new-tag-form')
 const tagSpan = document.getElementById('tags-go-here')
 let currentUser 
 
+function sayHello () {
+  debugger
+  alert('Hello')
+}
+
 logInForm.addEventListener('submit', function(event) {
   event.preventDefault();
   postingUsername(usernameInput.value)
@@ -146,7 +151,7 @@ function standardizeTimes(time) {
 function appendToCal(eventsObj) {
     eventsObj.forEach(event => {
         dateDiv = document.querySelector(`div[data-day-id='${event.time.split('T')[0]}']`)
-        dateDiv.innerHTML += `<div class="${event.tag.class_name}" data-tag-id="${event.tag.id}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}" data-event-time=${event.time}">
+        dateDiv.innerHTML += `<div draggable="true" ondragstart="dragstart_handler(event);" class="${event.tag.class_name}" data-tag-id="${event.tag.id}" data-event-id="${event.id}" data-event-title="${event.title}" data-event-description="${event.description}" data-event-time=${event.time}">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close" >
           <span aria-hidden="true">&times;</span>
         </button><em>${standardizeTimes(event.time.split("T")[1])}</em><br>${event.title}</div>`
@@ -155,7 +160,7 @@ function appendToCal(eventsObj) {
 
 function appendOneEventToCal(singleEvent) {
     dateDiv = document.querySelector(`div[data-day-id='${singleEvent.time.split('T')[0]}']`)
-    dateDiv.innerHTML += `<div class="${singleEvent.tag.class_name}" data-tag-id="${singleEvent.tag.id}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}" data-event-time=${singleEvent.time}">
+    dateDiv.innerHTML += `<div draggable="true" ondragstart="dragstart_handler(event);" class="${singleEvent.tag.class_name}" data-tag-id="${singleEvent.tag.id}" data-event-id="${singleEvent.id}" data-event-title="${singleEvent.title}" data-event-description="${singleEvent.description}" data-event-time=${singleEvent.time}">
       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
         <span aria-hidden="true">&times;</span>
       </button><em>${standardizeTimes(singleEvent.time.split("T")[1])}</em><br>${singleEvent.title}<div>`
@@ -391,6 +396,48 @@ function sorter (tdToSort) {
 eventTimeHeader.addEventListener('click', function(event) {
 
 })
+
+
+
+// calendarTable.addEventListener('drag', ev => {
+//   if (ev.target.tagName === "DIV") { 
+
+//     debugger
+    // ev.dataTransfer.setData("text", ev.target.dataset.eventId);
+    // ev.dataTransfer.dropEffect = "move";
+
+//    }
+// })
+
+
+// const calendarTableTD = calendarTable.getElementsByTagName('TD')
+
+// calendarTableTD.addEventListener('ondragover', ev => {
+//   ev.preventDefault();
+//   ev.dataTransfer.dropEffect = "move"
+
+// })
+
+
+
+function dragstart_handler(ev) {
+  // Add the target element's id to the data transfer object
+  ev.dataTransfer.setData("text/plain", ev.target.dataset.eventId);
+  ev.dropEffect = "move";
+ }
+ function dragover_handler(ev) {
+  ev.preventDefault();
+  // Set the dropEffect to move
+  ev.dataTransfer.dropEffect = "move"
+ }
+ function drop_handler(ev) {
+  ev.preventDefault();
+  // Get the id of the target and add the moved element to the target's DOM
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+ }
+
+
 
 
 // loadTags()
