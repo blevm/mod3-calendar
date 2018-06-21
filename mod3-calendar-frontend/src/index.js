@@ -307,7 +307,7 @@ function appendFlatironEventsToRows(flatironEventsObjs) {
       <td><input type="checkbox" data-flatiron-event-id="${flatironEvent.id}" ></td>
       <td style="width: 300px;" >${flatironEvent.title}</td>
       <td>${flatironEvent.description}</td>
-      <td class="f-e-time">${new Date (flatironEvent.time).toLocaleString()}</td>
+      <td class="f-e-time">${flatironEvent.time.split('T')[0]}</td>
       <td>${flatironEvent.location}</td>
      </tr>
     `
