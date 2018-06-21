@@ -116,7 +116,6 @@ function displayOneTagOnHeader(tag) {
 
 function deleteAnEvent(id) {
   let uniqueURL = `${EVENTS_URL}/${id}`
-  console.log(uniqueURL)
   fetch(uniqueURL, {method: "DELETE"})
 }
 
@@ -177,7 +176,6 @@ function tagOptionsForANewEvent() {
 }
 
 calendarTable.addEventListener('click', e=>{
-  console.log(e.target)
   if (e.target.tagName === "SPAN"){
     deleteAnEvent(e.target.parentElement.parentElement.dataset.eventId)
   } else if (e.target.tagName === "DIV" || e.target.parentElement.tagName === "DIV") {
@@ -218,7 +216,7 @@ calendarTable.addEventListener('click', e=>{
         </div>`
         $('#detailsModal').modal('show')
       }
-    } else if (e.target.tagName === "TD"){
+    } else if (e.target.tagName === "TD" && e.target.innerText !== ""  ){
       modalDiv.innerHTML =
       `<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
