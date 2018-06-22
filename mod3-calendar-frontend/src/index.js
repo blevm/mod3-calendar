@@ -17,6 +17,7 @@ const eventTimeHeader = document.getElementById('event-time-header')
 const newTagForm = document.getElementById('new-tag-form')
 const tagSpan = document.getElementById('tags-go-here')
 let currentUser
+let gameInPlay = false 
 
 function sayHello () {
   debugger
@@ -25,7 +26,12 @@ function sayHello () {
 
 logInForm.addEventListener('submit', function(event) {
   event.preventDefault();
+    if (usernameInput.value === 'game') {
+      game()
+      gameInPlay = true
+  }else {
   postingUsername(usernameInput.value)
+  }
 })
 
 function postingUsername(user) {
@@ -176,9 +182,23 @@ function tagOptionsForANewEvent() {
 }
 
 calendarTable.addEventListener('click', e=>{
-  if (e.target.tagName === "SPAN"){
+  // Game stuff
+  if (e.target.tagName === "TD" && gameInPlay === true) {
+    if (e.target.bgColor === "FF0000") {
+      e.target.bgColor = "E6E6FA"
+      return
+    }
+    if (e.target.bgColor === "") {
+      alert("You Loser!!")
+      location.reload();
+     }
+
+  }
+  // Game stuff
+
+  if (e.target.tagName === "SPAN" && gameInPlay === false){
     deleteAnEvent(e.target.parentElement.parentElement.dataset.eventId)
-  } else if (e.target.tagName === "DIV" || e.target.parentElement.tagName === "DIV") {
+  } else if (e.target.tagName === "DIV" || e.target.parentElement.tagName === "DIV"  && gameInPlay === false) {
       if (e.target.tagName === "DIV") {
         modalDiv.innerHTML =
         `<div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel" aria-hidden="true">
@@ -216,7 +236,7 @@ calendarTable.addEventListener('click', e=>{
         </div>`
         $('#detailsModal').modal('show')
       }
-    } else if (e.target.tagName === "TD" && e.target.innerText !== ""  ){
+    } else if (e.target.tagName === "TD" && e.target.innerText !== ""  && gameInPlay === false){
       modalDiv.innerHTML =
       `<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -441,6 +461,51 @@ function dragstart_handler(ev) {
   var data = ev.dataTransfer.getData("text");
   ev.target.appendChild(document.getElementById(data));
  }
+
+// Game start
+
+const coloredTd = []
+
+ function game () {
+
+    setInterval(function(){
+    const tds = document.querySelectorAll('#calendar-table td')
+    
+    tdColoredArr1 = [...tds].filter(td=>td.bgColor === "")
+    tdColoredArr2 = [...tds].map(td=> td.bgColor)
+    if (tdColoredArr1.length === 0 && tdColoredArr2.includes('FF0000') === false ) {
+      alert('You Win!!!!')
+      location.reload();   
+   }
+    else if (tdColoredArr1.length === 0 && tdColoredArr2.includes('FF0000') === true ) {
+      alert('You Lose!!!!')
+      location.reload();
+    } 
+    setBackgroundColor()
+   }, 500 );
+
+  }
+
+
+
+
+  function createRandomNumber () {
+    let minimum21 = 0
+    let maximum21 = 34
+    let randomnumber = Math.floor(Math.random() * (maximum21 - minimum21 + 1)) + minimum21;
+    if (coloredTd.includes(randomnumber)) {createRandomNumber() }
+    else { coloredTd.push(randomnumber)  }
+  }
+
+  function setBackgroundColor(){
+    createRandomNumber ()
+    const randomNum = coloredTd[coloredTd.length-1]
+  const td = document.querySelectorAll('#calendar-table td')
+  
+  td[`${randomNum}`].bgColor = 'FF0000'
+  }
+
+// Game end
 
 
 
