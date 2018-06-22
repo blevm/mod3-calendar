@@ -189,7 +189,7 @@ calendarTable.addEventListener('click', e=>{
       return
     }
     if (e.target.bgColor === "") {
-      alert("You Loser!!")
+      alert("You Lose!!")
       location.reload();
      }
 
@@ -467,10 +467,11 @@ function dragstart_handler(ev) {
 const coloredTd = []
 
  function game () {
-
+  const tds = document.querySelectorAll('#calendar-table td')
+    alert('Youve unlocked game mode\n Click the red boxes!')
+    calendarTable.scrollIntoView()
+   
     setInterval(function(){
-    const tds = document.querySelectorAll('#calendar-table td')
-    
     tdColoredArr1 = [...tds].filter(td=>td.bgColor === "")
     tdColoredArr2 = [...tds].map(td=> td.bgColor)
     if (tdColoredArr1.length === 0 && tdColoredArr2.includes('FF0000') === false ) {
